@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="view_product_template_form_inherit_custom" model="ir.ui.view">
+    <field name="name">product.template.form.inherit.custom</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_only_form_view"/>
+    <field name="arch" type="xml">
+        <!-- We use XPath to find the 'Accounting' tab and add our tab after it -->
+    <xpath expr="//notebook" position="inside">
+    <page string="Technical Specs" name="technical_specs">
+        <field name="custom_field_line_ids">
+            <!-- 1. Added the missing opening tree tag -->
+            <tree editable="bottom">
+                <field name="field_type" column_invisible="True"/> 
+                
+                <!-- 2. The definition field -->
+                <field name="field_definition_id"/> 
+                
+                <!-- 3. Your value fields -->
+                <field name="value_text" invisible="field_type != 'char'"/>
+                <field name="value_date" invisible="field_type != 'date'"/>
+                
+                <!-- 4. The selection dropdown with the domain -->
+                <field name="value_selection_id" 
+                       invisible="field_type != 'selection'" 
+                       domain="[('field_definition_id', '=', field_definition_id)]"/>
+            </tree> <!-- This now matches an opening tag -->
+        </field>
+    </page>
+</xpath>
+    </field>
+</record>
+</odoo>
