@@ -1,0 +1,8 @@
+# Ignore everything in this folder
+/*
+
+# But do NOT ignore the .gitignore file itself
+!.gitignore
+
+# Add your custom module names here (starting with an exclamation mark)
+# Example: !my_custom_module/
