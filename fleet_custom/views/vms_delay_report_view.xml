@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vms_delay_report_form" model="ir.ui.view">
+    <field name="name">vms.delay_report.form</field>
+    <field name="model">vms.delay_report</field>
+    <field name="arch" type="xml">
+        <form string="Delay Report &amp; Request Approval">
+            <header>
+                <!-- Site Engineer Submit -->
+                <button name="action_submit" string="Submit for Review" type="object" 
+                        class="oe_highlight" groups="vms_custom.group_vms_site_engineer"
+                        invisible="state != 'draft'"/>
+
+                <!-- Engineering Manager Continue -->
+                <button name="action_continue" string="Escalate to GM (Start Alarm)" type="object" 
+                        class="oe_highlight" groups="vms_custom.group_vms_engineering_manager"
+                        invisible="state != 'submitted'"/>
+                
+                <button name="action_return" string="Return to Engineer" type="object" 
+                        groups="vms_custom.group_vms_engineering_manager"
+                        invisible="state != 'submitted'"/>
+
+                <!-- General Manager: This approves the DRIVER REQUEST -->
+                <button name="action_gm_approve" string="Approve Driver Request" type="object" 
+                        class="btn-success" groups="vms_custom.group_vms_general_manager"
+                        invisible="state != 'reported'"/>
+
+                <field name="state" widget="statusbar" statusbar_visible="draft,submitted,reported,approved"/>
+            </header>
+            <sheet>
+                <group>
+                    <group string="Request Information">
+                        <!-- The actual request to be approved -->
+                        <field name="request_id" readonly="state != 'draft'"/>
+                        <field name="driver_id" readonly="1"/>
+                    </group>
+                    <group string="Management Details">
+                        <field name="site_engineer_id" readonly="1"/>
+                        <field name="date_reported" readonly="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Engineer's Justification">
+                        <group>
+                            <field name="attachment_file" filename="attachment_name" string="Attach Signed Request"/>
+                            <field name="attachment_name" invisible="1"/>
+                            <field name="notes" placeholder="Why is this being escalated?"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+    </record >
+<record id="action_vms_delay" model="ir.actions.act_window">
+    <field name="name">Delay Requests</field>
+    <field name="res_model">vms.delay_report</field>
+    <field name="view_mode">tree,form</field>
+    <field name="target">current</field>
+    <field name="domain">[]</field>
+    <field name="context">{}</field>
+    <field name="groups_id" eval="[(4, ref('group_vms_site_engineer'))]"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create delay report
+        </p>
+    </field>
+
+</record>
+
+<menuitem id="menu_vms_delay"
+              name="Delay Requests"
+              parent="menu_vms_root"
+              action="action_vms_delay"
+              sequence="10"/>
+
+
+
+
+</odoo>
